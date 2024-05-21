@@ -1,0 +1,169 @@
+fragment BaseGraphNode on GraphNode {
+  __typename
+  ins {
+    ...FlussPort
+  }
+  outs {
+    ...FlussPort
+  }
+  constants {
+    ...FlussPort
+  }
+  voids {
+    ...FlussPort
+  }
+  globalsMap
+  constantsMap
+  title
+  description
+  kind
+}
+
+fragment FlussBinds on Binds {
+  templates
+}
+
+fragment RetriableNode on RetriableNode {
+  retries
+  retryDelay
+}
+
+fragment AssignableNode on AssignableNode {
+  nextTimeout
+}
+
+fragment RekuestNode on RekuestNode {
+  hash
+  mapStrategy
+  allowLocalExecution
+  binds {
+    ...FlussBinds
+  }
+  nodeKind
+}
+
+fragment RekuestMapNode on RekuestMapNode {
+  ...BaseGraphNode
+  ...RetriableNode
+  ...AssignableNode
+  ...RekuestNode
+  __typename
+  hello
+}
+
+fragment RekuestFilterNode on RekuestFilterNode {
+  ...BaseGraphNode
+  ...RetriableNode
+  ...AssignableNode
+  ...RekuestNode
+  __typename
+  path
+}
+
+fragment ReactiveNode on ReactiveNode {
+  ...BaseGraphNode
+  __typename
+  implementation
+}
+
+fragment ArgNode on ArgNode {
+  ...BaseGraphNode
+  __typename
+}
+
+fragment ReturnNode on ReturnNode {
+  ...BaseGraphNode
+  __typename
+}
+
+fragment GraphNode on GraphNode {
+  __typename
+  id
+  position {
+    x
+    y
+  }
+  parentNode
+  ...RekuestFilterNode
+  ...RekuestMapNode
+  ...ReactiveNode
+  ...ArgNode
+  ...ReturnNode
+}
+
+fragment StreamItem on StreamItem {
+  kind
+  label
+}
+
+fragment BaseGraphEdge on GraphEdge {
+  __typename
+  id
+  source
+  sourceHandle
+  target
+  targetHandle
+  kind
+  stream {
+    ...StreamItem
+  }
+}
+
+fragment LoggingEdge on LoggingEdge {
+  ...BaseGraphEdge
+  level
+}
+
+fragment VanillaEdge on VanillaEdge {
+  ...BaseGraphEdge
+  label
+}
+
+fragment GraphEdge on GraphEdge {
+  __typename
+  id
+  ...LoggingEdge
+  ...VanillaEdge
+}
+
+fragment GlobalArg on GlobalArg {
+  key
+  port {
+    ...FlussPort
+  }
+}
+
+fragment Graph on Graph {
+  nodes {
+    ...GraphNode
+  }
+  edges {
+    ...GraphEdge
+  }
+  globals {
+    ...GlobalArg
+  }
+}
+
+fragment Flow on Flow {
+  __typename
+  id
+  graph {
+    ...Graph
+  }
+  title
+  description
+  createdAt
+  workspace {
+    id
+  }
+}
+
+fragment ListFlow on Flow {
+  id
+  title
+  createdAt
+  workspace {
+    id
+  }
+}

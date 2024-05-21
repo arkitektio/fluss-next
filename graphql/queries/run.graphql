@@ -1,0 +1,12 @@
+query Run($id: ID!) {
+  run(id: $id) {
+    ...Run
+  }
+}
+
+query SearchRuns($search: String, $values: [ID!]) {
+  options: runs(filters: { search: $search, ids: $values }) {
+    value: id
+    label: assignation
+  }
+}
