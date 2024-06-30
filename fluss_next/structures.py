@@ -38,3 +38,16 @@ try:
 except ImportError:
     raise e
     structure_reg = None
+
+
+try:
+    from fluss_next.arkitekt import builder
+    from arkitekt_next.service_registry import get_default_service_builder_registry
+    from arkitekt_next.model import Requirement
+
+    service_builder_registry = get_default_service_builder_registry()
+    service_builder_registry.register("fluss", builder, Requirement("arkitekt_fluss_next", "0.1.0"))
+
+except ImportError as e:
+    raise e
+    service_builder_registry = None
