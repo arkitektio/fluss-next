@@ -7,6 +7,7 @@ try:
         id_shrink,
     )
     from rekuest_next.widgets import SearchWidget
+
     from unlok_next.api.schema import RoomFragment, aget_room
 
     structure_reg = get_default_structure_registry()
@@ -20,4 +21,5 @@ try:
 
 except ImportError as e:
     raise e
+    print(e)
     structure_reg = None
