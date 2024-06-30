@@ -1,8 +1,8 @@
-from fluss_next.rath import FlussRath, current_fluss_next_rath
+from unlok_next.rath import UnlokRath, current_unlok_next_rath
 
 
-def execute(operation, variables, rath: FlussRath = None):
-    rath = rath or current_fluss_next_rath.get()
+def execute(operation, variables, rath: UnlokRath = None):
+    rath = rath or current_unlok_next_rath.get()
     return operation(
         **rath.query(
             operation.Meta.document,
@@ -11,9 +11,9 @@ def execute(operation, variables, rath: FlussRath = None):
     )
 
 
-async def aexecute(operation, variables, rath: FlussRath = None):
+async def aexecute(operation, variables, rath: UnlokRath = None):
     print(operation, variables)
-    rath = rath or current_fluss_next_rath.get()
+    rath = rath or current_unlok_next_rath.get()
 
     x = await rath.aquery(
         operation.Meta.document, operation.Arguments(**variables).dict(by_alias=True)
@@ -22,8 +22,8 @@ async def aexecute(operation, variables, rath: FlussRath = None):
     return operation(**x.data)
 
 
-def subscribe(operation, variables, rath: FlussRath = None):
-    rath = rath or current_fluss_next_rath.get()
+def subscribe(operation, variables, rath: UnlokRath = None):
+    rath = rath or current_unlok_next_rath.get()
 
     for ev in rath.subscribe(
         operation.Meta.document, operation.Arguments(**variables).dict(by_alias=True)
@@ -31,8 +31,8 @@ def subscribe(operation, variables, rath: FlussRath = None):
         yield operation(**ev.data)
 
 
-async def asubscribe(operation, variables, rath: FlussRath = None):
-    rath = rath or current_fluss_next_rath.get()
+async def asubscribe(operation, variables, rath: UnlokRath = None):
+    rath = rath or current_unlok_next_rath.get()
     async for event in rath.asubscribe(
         operation.Meta.document, operation.Arguments(**variables).dict(by_alias=True)
     ):

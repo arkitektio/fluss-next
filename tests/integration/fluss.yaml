@@ -3,7 +3,7 @@ postgres:
   port: 5432
   user: hello_django
   password: hello_django
-  db_name: flussdb
+  db_name: unlokdb
 
 redis:
   host: redis

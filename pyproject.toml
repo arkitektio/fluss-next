@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "fluss"
+name = "unlok"
 version = "0.1.61"
 description = ""
 authors = ["jhnnsrs <jhnnsrs@gmail.com>"]
-packages = [{ include = "fluss" }]
+packages = [{ include = "unlok" }]
 
 [tool.poetry.dependencies]
 python = "^3.8"

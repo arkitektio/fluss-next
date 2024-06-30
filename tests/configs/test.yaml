@@ -8,7 +8,7 @@ herre:
   scopes:
     - introspection
   secure: false
-fluss:
+unlok:
   endpoint_url: http://localhost:8078/graphql
   ws_endpoint_url: ws://localhost:8078/graphql
   healthz: http://localhost:8078/ht
