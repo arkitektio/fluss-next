@@ -39,18 +39,7 @@ fragment FlussChildPortNested on ChildPort {
   __typename
   kind
   identifier
-  child {
-    kind
-    identifier
-    scope
-    assignWidget {
-      ...FlussAssignWidget
-    }
-    returnWidget {
-      ...FlussReturnWidget
-    }
-  }
-  variants {
+  children {
     kind
     identifier
     scope
@@ -75,10 +64,7 @@ fragment FlussChildPort on ChildPort {
   kind
   identifier
   scope
-  child {
-    ...FlussChildPortNested
-  }
-  variants {
+  children {
     ...FlussChildPortNested
   }
   assignWidget {
@@ -152,10 +138,7 @@ fragment FlussPort on Port {
   }
   kind
   identifier
-  child {
-    ...FlussChildPort
-  }
-  variants {
+  children {
     ...FlussChildPort
   }
   default
