@@ -1,6 +1,6 @@
 import json
 import pytest
-from fluss.api.schema import (
+from unlok.api.schema import (
     FlowFragment,
 )
 import yaml
