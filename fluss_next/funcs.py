@@ -12,13 +12,11 @@ def execute(operation, variables, rath: FlussRath = None):
 
 
 async def aexecute(operation, variables, rath: FlussRath = None):
-    print(operation, variables)
     rath = rath or current_fluss_next_rath.get()
 
     x = await rath.aquery(
         operation.Meta.document, operation.Arguments(**variables).dict(by_alias=True)
     )
-    print(x)
     return operation(**x.data)
 
 

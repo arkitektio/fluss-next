@@ -29,7 +29,6 @@ class FlussRath(rath.Rath):
     link: FlussLinkComposition = Field(default_factory=FlussLinkComposition)
 
     async def __aenter__(self):
-        print("FlussRath.__aenter__")
         await super().__aenter__()
         current_fluss_next_rath.set(self)
         return self
