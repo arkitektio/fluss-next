@@ -19,26 +19,31 @@ mutation Snapshot($run: ID!, $events: [ID!]!, $t: Int!) {
 }
 
 mutation Track(
+  $reference: String!
   $run: ID!
-  $edge: ID!
+  $t: Int!
+  $caused_by: [ID!]!
   $kind: RunEventKind!
   $value: EventValue
-  $caused_by: [ID!]!
-  $t: Int!
+  $message: String
+  $source: String!
+  $handle: String!
 ) {
   # Track a new event on the fluss platform
   track(
     input: {
       run: $run
-      edge: $edge
       kind: $kind
       value: $value
       causedBy: $caused_by
       t: $t
+      reference: $reference
+      message: $message
+      source: $source
+      handle: $handle
     }
   ) {
     id
-    edge
     kind
     value
     causedBy
