@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "unlok"
-version = "0.1.61"
+name = "fluss-next"
+version = "0.1.62"
 description = ""
 authors = ["jhnnsrs <jhnnsrs@gmail.com>"]
-packages = [{ include = "unlok" }]
+packages = [{ include = "fluss_next" }]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -32,5 +32,9 @@ qt_api = "pyqt5"
 markers = [
     "integration: marks tests that require a running server",
     "qt: marks tests that require a running qt application",
-    "serialize: marks tests that require serialization",
+    "define: marks tests that concern to definining a funcionality",
+    "shrink: marks tests that concern to serializing inputs to requests to an actor",
+    "expand: marks tests that concern to serializing outputs from answers of an actor",
+    "actor: marks tests that concern actors",
 ]
+

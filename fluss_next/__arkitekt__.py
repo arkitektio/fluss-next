@@ -1,4 +1,5 @@
-try:
+
+def init_services(service_builder_registry):
     from .fluss import Fluss
     from .rath import FlussLinkComposition, FlussRath
     from rath.links.split import SplitLink
@@ -10,7 +11,6 @@ try:
     from fakts import Fakts
 
     from arkitekt_next.service_registry import (
-        get_default_service_builder_registry,
         Params,
     )
     from arkitekt_next.model import Requirement
@@ -32,7 +32,6 @@ try:
             )
         )
 
-    service_builder_registry = get_default_service_builder_registry()
     service_builder_registry.register(
         "fluss",
         build_arkitekt_next_fluss,
@@ -41,8 +40,4 @@ try:
             description="An instance of ArkitektNext fluss to retrieve graphs from",
         ),
     )
-    imported = True
-
-except ImportError as e:
-    imported = False
-    raise e
+    
