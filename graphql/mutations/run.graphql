@@ -11,6 +11,13 @@ mutation CreateRun($assignation: ID!, $flow: ID!, $snapshot_interval: Int!) {
   }
 }
 
+mutation CloseRun($run: ID!) {
+  # Start a run on fluss
+  closeRun(input: { run: $run }) {
+    id
+  }
+}
+
 mutation Snapshot($run: ID!, $events: [ID!]!, $t: Int!) {
   # Snapshot the current state on the fluss platform
   snapshot(input: { run: $run, events: $events, t: $t }) {

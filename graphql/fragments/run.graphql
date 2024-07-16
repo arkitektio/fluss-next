@@ -10,7 +10,6 @@ fragment Run on Run {
     t
     causedBy
     createdAt
-    edge
     value
   }
   createdAt
