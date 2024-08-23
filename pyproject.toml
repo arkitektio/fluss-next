@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fluss-next"
-version = "0.1.68"
+version = "0.1.77"
 description = ""
 authors = ["jhnnsrs <jhnnsrs@gmail.com>"]
 packages = [{ include = "fluss_next" }]

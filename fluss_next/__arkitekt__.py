@@ -1,6 +1,3 @@
-
-
-
 def init_services(service_builder_registry):
     from .fluss import Fluss
     from .rath import FlussLinkComposition, FlussRath
@@ -22,7 +19,9 @@ def init_services(service_builder_registry):
     class ArkitektNextFluss(Fluss):
         rath: FlussRath
 
-    def build_arkitekt_next_fluss(fakts: Fakts, herre: Herre, params: Params, manifest: Manifest):
+    def build_arkitekt_next_fluss(
+        fakts: Fakts, herre: Herre, params: Params, manifest: Manifest
+    ):
         return ArkitektNextFluss(
             rath=FlussRath(
                 link=FlussLinkComposition(
@@ -44,4 +43,3 @@ def init_services(service_builder_registry):
             description="An instance of ArkitektNext fluss to retrieve graphs from",
         ),
     )
-    

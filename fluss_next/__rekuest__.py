@@ -1,6 +1,3 @@
-
-
-
 def register_structures(structure_reg):
     from rekuest_next.structures.default import (
         get_default_structure_registry,
