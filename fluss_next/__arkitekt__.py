@@ -1,20 +1,24 @@
+from fluss_next.fluss import Fluss
+from fluss_next.rath import FlussLinkComposition, FlussRath
+from rath.links.split import SplitLink
+from rath.contrib.fakts.links.aiohttp import FaktsAIOHttpLink
+from rath.contrib.fakts.links.graphql_ws import FaktsGraphQLWSLink
+from rath.contrib.herre.links.auth import HerreAuthLink
+from graphql import OperationType
+from herre import Herre
+from fakts import Fakts
+
+from arkitekt_next.model import Manifest
+
+from arkitekt_next.service_registry import (
+    Params,
+)
+from arkitekt_next.model import Requirement
+
+
+
 def init_services(service_builder_registry):
-    from .fluss import Fluss
-    from .rath import FlussLinkComposition, FlussRath
-    from rath.links.split import SplitLink
-    from rath.contrib.fakts.links.aiohttp import FaktsAIOHttpLink
-    from rath.contrib.fakts.links.graphql_ws import FaktsGraphQLWSLink
-    from rath.contrib.herre.links.auth import HerreAuthLink
-    from graphql import OperationType
-    from herre import Herre
-    from fakts import Fakts
-
-    from arkitekt_next.model import Manifest
-
-    from arkitekt_next.service_registry import (
-        Params,
-    )
-    from arkitekt_next.model import Requirement
+    
 
     class ArkitektNextFluss(Fluss):
         rath: FlussRath
@@ -27,8 +31,12 @@ def init_services(service_builder_registry):
                 link=FlussLinkComposition(
                     auth=HerreAuthLink(herre=herre),
                     split=SplitLink(
-                        left=FaktsAIOHttpLink(fakts_group="fluss", fakts=fakts),
-                        right=FaktsGraphQLWSLink(fakts_group="fluss", fakts=fakts),
+                        left=FaktsAIOHttpLink(
+                            fakts_group="fluss", fakts=fakts, endpoint_url="FAKE_URL"
+                        ),
+                        right=FaktsGraphQLWSLink(
+                            fakts_group="fluss", fakts=fakts, ws_endpoint_url="FAKE_URL"
+                        ),
                         split=lambda o: o.node.operation != OperationType.SUBSCRIPTION,
                     ),
                 )
