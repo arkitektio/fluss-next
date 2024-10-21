@@ -21,7 +21,7 @@ class NodeException(str):
         yield cls.validate
 
     @classmethod
-    def validate(cls, v):
+    def validate(cls, v, info):
         if isinstance(v, Exception):
             v = str(v)
 
@@ -37,7 +37,7 @@ class NodeException(str):
         return f"Exception({str(self)})"
 
 
-EventValue = Union[Tuple[Any, ...], NodeException]
+EventValue = Tuple[Any, ...]
 
 
 class ValidatorFunction(str):

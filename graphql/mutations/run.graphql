@@ -32,6 +32,7 @@ mutation Track(
   $caused_by: [ID!]!
   $kind: RunEventKind!
   $value: EventValue
+  $exception: String
   $message: String
   $source: String!
   $handle: String!
@@ -42,6 +43,7 @@ mutation Track(
       run: $run
       kind: $kind
       value: $value
+      exception: $exception
       causedBy: $caused_by
       t: $t
       reference: $reference
