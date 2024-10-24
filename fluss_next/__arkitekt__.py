@@ -45,6 +45,7 @@ def init_services(service_builder_registry):
         "fluss",
         build_arkitekt_next_fluss,
         Requirement(
+            key="fluss",
             service="live.arkitekt.fluss",
             description="An instance of ArkitektNext fluss to retrieve graphs from",
         ),
