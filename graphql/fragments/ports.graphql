@@ -44,18 +44,36 @@ fragment FlussChildPortNested on ChildPort {
     identifier
     scope
     assignWidget {
-      ...FlussAssignWidget
+      __typename
+      kind
+      ...FlussStringAssignWidget
+      ...FlussSearchAssignWidget
+      ...FlussSliderAssignWidget
+      ...FlussChoiceAssignWidget
+      ...FlussCustomAssignWidget
     }
     returnWidget {
-      ...FlussReturnWidget
+      __typename
+      kind
+      ...FlussCustomReturnWidget
+      ...FlussChoiceReturnWidget
     }
   }
   scope
   assignWidget {
-    ...FlussAssignWidget
+    __typename
+    kind
+    ...FlussStringAssignWidget
+    ...FlussSearchAssignWidget
+    ...FlussSliderAssignWidget
+    ...FlussChoiceAssignWidget
+    ...FlussCustomAssignWidget
   }
   returnWidget {
-    ...FlussReturnWidget
+    __typename
+    kind
+    ...FlussCustomReturnWidget
+    ...FlussChoiceReturnWidget
   }
 }
 
@@ -68,10 +86,19 @@ fragment FlussChildPort on ChildPort {
     ...FlussChildPortNested
   }
   assignWidget {
-    ...FlussAssignWidget
+    __typename
+    kind
+    ...FlussStringAssignWidget
+    ...FlussSearchAssignWidget
+    ...FlussSliderAssignWidget
+    ...FlussChoiceAssignWidget
+    ...FlussCustomAssignWidget
   }
   returnWidget {
-    ...FlussReturnWidget
+    __typename
+    kind
+    ...FlussCustomReturnWidget
+    ...FlussChoiceReturnWidget
   }
   nullable
 }
@@ -95,26 +122,6 @@ fragment FlussMessageEffect on MessageEffect {
   message
 }
 
-fragment FlussPortEffect on Effect {
-  __typename
-  kind
-  dependencies {
-    ...FlussEffectDependency
-  }
-  ...FlussCustomEffect
-  ...FlussMessageEffect
-}
-
-fragment FlussAssignWidget on AssignWidget {
-  __typename
-  kind
-  ...FlussStringAssignWidget
-  ...FlussSearchAssignWidget
-  ...FlussSliderAssignWidget
-  ...FlussChoiceAssignWidget
-  ...FlussCustomAssignWidget
-}
-
 fragment Validator on Validator {
   function
   dependencies
@@ -128,13 +135,27 @@ fragment FlussPort on Port {
   description
   scope
   effects {
-    ...FlussPortEffect
+    kind
+    dependencies {
+      ...FlussEffectDependency
+    }
+    ...FlussCustomEffect
+    ...FlussMessageEffect
   }
   assignWidget {
-    ...FlussAssignWidget
+    __typename
+    kind
+    ...FlussStringAssignWidget
+    ...FlussSearchAssignWidget
+    ...FlussSliderAssignWidget
+    ...FlussChoiceAssignWidget
+    ...FlussCustomAssignWidget
   }
   returnWidget {
-    ...FlussReturnWidget
+    __typename
+    kind
+    ...FlussCustomReturnWidget
+    ...FlussChoiceReturnWidget
   }
   kind
   identifier
@@ -163,11 +184,4 @@ fragment FlussChoiceReturnWidget on ChoiceReturnWidget {
     value
     description
   }
-}
-
-fragment FlussReturnWidget on ReturnWidget {
-  __typename
-  kind
-  ...FlussCustomReturnWidget
-  ...FlussChoiceReturnWidget
 }

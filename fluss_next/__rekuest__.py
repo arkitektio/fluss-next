@@ -7,17 +7,17 @@ def register_structures(structure_reg):
     from rekuest_next.widgets import SearchWidget
 
     from fluss_next.api.schema import (
-        FlowFragment,
+        Flow,
         SearchFlowsQuery,
         aget_flow,
-        RunFragment,
+        Run,
         arun,
         SearchRunsQuery,
     )
 
     structure_reg = get_default_structure_registry()
     structure_reg.register_as_structure(
-        FlowFragment,
+        Flow,
         identifier="@fluss/flow",
         scope=PortScope.GLOBAL,
         aexpand=aget_flow,
@@ -25,7 +25,7 @@ def register_structures(structure_reg):
         default_widget=SearchWidget(query=SearchFlowsQuery.Meta.document, ward="fluss"),
     )
     structure_reg.register_as_structure(
-        RunFragment,
+        Run,
         identifier="@fluss/run",
         scope=PortScope.GLOBAL,
         aexpand=arun,

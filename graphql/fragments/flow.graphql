@@ -1,4 +1,15 @@
+fragment BaseRekuestMapNode on RekuestMapNode {
+  hello
+}
+
+fragment EvenBasierGraphNode on GraphNode {
+  __typename
+  parentNode
+  ...BaseRekuestMapNode
+}
+
 fragment BaseGraphNode on GraphNode {
+  ...EvenBasierGraphNode
   __typename
   ins {
     ...FlussPort
@@ -12,6 +23,12 @@ fragment BaseGraphNode on GraphNode {
   voids {
     ...FlussPort
   }
+  id
+  position {
+    x
+    y
+  }
+  parentNode
   globalsMap
   constantsMap
   title
@@ -76,21 +93,6 @@ fragment ReturnNode on ReturnNode {
   __typename
 }
 
-fragment GraphNode on GraphNode {
-  __typename
-  id
-  position {
-    x
-    y
-  }
-  parentNode
-  ...RekuestFilterNode
-  ...RekuestMapNode
-  ...ReactiveNode
-  ...ArgNode
-  ...ReturnNode
-}
-
 fragment StreamItem on StreamItem {
   kind
   label
@@ -119,13 +121,6 @@ fragment VanillaEdge on VanillaEdge {
   label
 }
 
-fragment GraphEdge on GraphEdge {
-  __typename
-  id
-  ...LoggingEdge
-  ...VanillaEdge
-}
-
 fragment GlobalArg on GlobalArg {
   key
   port {
@@ -133,12 +128,22 @@ fragment GlobalArg on GlobalArg {
   }
 }
 
+fragment GraphNode on GraphNode {
+  kind
+  ...RekuestFilterNode
+  ...RekuestMapNode
+  ...ReactiveNode
+  ...ArgNode
+  ...ReturnNode
+}
+
 fragment Graph on Graph {
   nodes {
     ...GraphNode
   }
   edges {
-    ...GraphEdge
+    ...LoggingEdge
+    ...VanillaEdge
   }
   globals {
     ...GlobalArg
