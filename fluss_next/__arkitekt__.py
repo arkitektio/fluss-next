@@ -1,3 +1,5 @@
+import json
+import os
 from fluss_next.fluss import Fluss
 from fluss_next.rath import FlussLinkComposition, FlussRath
 from rath.links.split import SplitLink
@@ -12,18 +14,25 @@ from arkitekt_next.base_models import Manifest
 
 from arkitekt_next.service_registry import (
     Params,
+    BaseArkitektService
 )
 from arkitekt_next.base_models import Requirement
 
+class ArkitektNextFluss(Fluss):
+    rath: FlussRath
 
-def init_services(service_builder_registry):
 
-    class ArkitektNextFluss(Fluss):
-        rath: FlussRath
+def build_relative_path(*path: str) -> str:
+    return os.path.join(os.path.dirname(__file__), *path)
 
-    def build_arkitekt_next_fluss(
-        fakts: Fakts, herre: Herre, params: Params, manifest: Manifest
-    ):
+
+class FlussNextService(BaseArkitektService):
+
+
+    def get_service_name(self):
+        return "fluss"
+
+    def build_service(self, fakts: Fakts, herre: Herre, params: Params, manifest: Manifest):
         return ArkitektNextFluss(
             rath=FlussRath(
                 link=FlussLinkComposition(
@@ -41,12 +50,27 @@ def init_services(service_builder_registry):
             )
         )
 
-    service_builder_registry.register(
-        "fluss",
-        build_arkitekt_next_fluss,
-        Requirement(
-            key="fluss",
-            service="live.arkitekt.fluss",
-            description="An instance of ArkitektNext fluss to retrieve graphs from",
-        ),
-    )
+    def get_requirements(self):
+        return [
+            Requirement(
+                key="fluss",
+                service="live.arkitekt.fluss",
+                description="An instance of ArkitektNext fluss to retrieve graphs from",
+            )
+        ]
+
+    
+    def get_graphql_schema(self):
+        schema_graphql_path = build_relative_path("api", "schema.graphql")
+        with open(schema_graphql_path) as f:
+            return f.read()
+        
+    def get_turms_project(self):
+        turms_prject = build_relative_path("api", "project.json")
+        with open(turms_prject) as f:
+            return json.loads(f.read())
+
+
+
+def build_services():
+    return [FlussNextService()]
