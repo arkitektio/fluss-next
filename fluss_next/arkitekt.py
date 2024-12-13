@@ -12,11 +12,14 @@ from fakts_next import Fakts
 
 from arkitekt_next.base_models import Manifest
 
+
 from arkitekt_next.service_registry import (
+    BaseArkitektService,
     Params,
-    BaseArkitektService
+    get_default_service_registry,
 )
 from arkitekt_next.base_models import Requirement
+
 
 class ArkitektNextFluss(Fluss):
     rath: FlussRath
@@ -28,11 +31,12 @@ def build_relative_path(*path: str) -> str:
 
 class FlussNextService(BaseArkitektService):
 
-
     def get_service_name(self):
         return "fluss"
 
-    def build_service(self, fakts: Fakts, herre: Herre, params: Params, manifest: Manifest):
+    def build_service(
+        self, fakts: Fakts, herre: Herre, params: Params, manifest: Manifest
+    ):
         return ArkitektNextFluss(
             rath=FlussRath(
                 link=FlussLinkComposition(
@@ -59,18 +63,15 @@ class FlussNextService(BaseArkitektService):
             )
         ]
 
-    
     def get_graphql_schema(self):
         schema_graphql_path = build_relative_path("api", "schema.graphql")
         with open(schema_graphql_path) as f:
             return f.read()
-        
+
     def get_turms_project(self):
         turms_prject = build_relative_path("api", "project.json")
         with open(turms_prject) as f:
             return json.loads(f.read())
 
 
-
-def build_services():
-    return [FlussNextService()]
+get_default_service_registry().register(FlussNextService())
