@@ -1,4 +1,3 @@
-import yaml
 from typing import Callable
 import uuid
 import random
@@ -35,12 +34,6 @@ class Graph:
 
         return edges
 
-    @classmethod
-    def from_file(cls, file_path):
-        with open(file_path, "r") as f:
-            g = yaml.safe_load(f)
-
-        return cls(**g)
 
 
 class MockableTrait:

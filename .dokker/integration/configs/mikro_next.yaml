@@ -1,0 +1,44 @@
+csrf_trusted_origins:
+- http://jhnnsrs-lab.hyena-sole.ts.net
+- https://jhnnsrs-lab.hyena-sole.ts.net
+- http://jhnnsrs-server
+- https://jhnnsrs-server
+- http://localhost
+- https://localhost
+db:
+  db_name: fluss
+  dependency: db
+  engine: django.db.backends.postgresql
+  host: db
+  password: 2697dabfd41bc049bd860c12d00b771b
+  port: 5432
+  username: greasyseashellsheep
+django:
+  admin:
+    email: admin@admin.com
+    password: admin
+    username: admin
+  debug: true
+  hosts:
+  - '*'
+  secret_key: HF23CWErJwCcx6TP9x6QAjdWVYTvVbcRdxDV-R2eHQ8
+lok:
+  issuer: lok
+  key_type: RS256
+  public_key_pem_file: public_key.pem
+redis:
+  dependency: redis
+  host: redis
+  port: 6379
+s3:
+  access_key: minio_root-minio_root
+  buckets:
+    media: zippy-apricot-dhole
+  dependency: minio
+  host: minio
+  name: snoopy-wheat-skunk
+  port: 9000
+  protocol: http
+  secret_key: v7UKHZr8N8XQatD-kMhxCkDiELzSSn5QPrztpPjrk2I
+scopes:
+  read_image: Read image from the database

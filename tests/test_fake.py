@@ -1,6 +1,10 @@
 import pytest
+from fluss_next.api.schema import get_flow
+
 
 
 @pytest.mark.asyncio
-async def test_fake():
-    assert True
+def test_fake(deployed_app):
+
+    x = get_flow(id=3)
+    
