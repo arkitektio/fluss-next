@@ -1,11 +1,8 @@
-fragment BaseRekuestMapNode on RekuestMapNode {
-  hello
-}
+
 
 fragment EvenBasierGraphNode on GraphNode {
   __typename
   parentNode
-  ...BaseRekuestMapNode
 }
 
 fragment BaseGraphNode on GraphNode {
@@ -37,7 +34,7 @@ fragment BaseGraphNode on GraphNode {
 }
 
 fragment FlussBinds on Binds {
-  templates
+  implementations
 }
 
 fragment RetriableNode on RetriableNode {
@@ -49,30 +46,30 @@ fragment AssignableNode on AssignableNode {
   nextTimeout
 }
 
-fragment RekuestNode on RekuestNode {
+fragment RekuestActionNode on RekuestActionNode {
   hash
   mapStrategy
   allowLocalExecution
   binds {
     ...FlussBinds
   }
-  nodeKind
+  actionKind
 }
 
-fragment RekuestMapNode on RekuestMapNode {
+fragment RekuestMapActionNode on RekuestMapActionNode {
   ...BaseGraphNode
   ...RetriableNode
   ...AssignableNode
-  ...RekuestNode
+  ...RekuestActionNode
   __typename
   hello
 }
 
-fragment RekuestFilterNode on RekuestFilterNode {
+fragment RekuestFilterActionNode on RekuestFilterActionNode {
   ...BaseGraphNode
   ...RetriableNode
   ...AssignableNode
-  ...RekuestNode
+  ...RekuestActionNode
   __typename
   path
 }
@@ -130,8 +127,8 @@ fragment GlobalArg on GlobalArg {
 
 fragment GraphNode on GraphNode {
   kind
-  ...RekuestFilterNode
-  ...RekuestMapNode
+  ...RekuestFilterActionNode
+  ...RekuestMapActionNode
   ...ReactiveNode
   ...ArgNode
   ...ReturnNode

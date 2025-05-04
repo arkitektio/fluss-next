@@ -1,4 +1,6 @@
-from typing import List, Union, Any, Tuple
+"""Custom scalars for GraphQL queries and exceptions."""
+
+from typing import Any, Tuple
 from graphql import (
     DocumentNode,
     parse,
@@ -6,35 +8,41 @@ from graphql import (
     OperationType,
     print_ast,
     print_source_location,
-    print_location,
     GraphQLError,
 )
-from graphql.language.print_location import print_prefixed_lines
+from pydantic import GetCoreSchemaHandler
+from pydantic_core import CoreSchema, core_schema
 
 
 class NodeException(str):
-    @classmethod
-    def __get_validators__(cls):
-        # one or more validators may be yielded which will be called in the
-        # order to validate the input, each validator will receive as an input
-        # the value returned from the previous validator
-        yield cls.validate
+    """Custom scalar type for representing exceptions as strings."""
 
     @classmethod
-    def validate(cls, v, info):
+    def __get_pydantic_core_schema__(  # noqa: D105
+        self,
+        source_type: Any,  # noqa: ANN401
+        handler: GetCoreSchemaHandler,  # noqa: ANN401
+    ) -> CoreSchema:
+        """Get the pydantic core schema for the search query"""
+        return core_schema.no_info_after_validator_function(self.validate, handler(str))
+
+    @classmethod
+    def validate(cls, v: Any) -> str:  # noqa: ANN401
+        """Validate the input value."""
         if isinstance(v, Exception):
             v = str(v)
 
         if not isinstance(v, str):
-            raise TypeError(f"Could not parse Exception {v} as a string")
+            raise ValueError(f"Could not parse Exception {v} as a string")
         # you could also return a string here which would mean model.post_code
         # would be a string, pydantic won't care but you could end up with some
         # confusion since the value's type won't match the type annotation
         # exactly
         return cls(v)
 
-    def __repr__(self):
-        return f"Exception({str(self)})"
+    def __repr__(self) -> str:
+        """Return a string representation of the NodeException."""
+        return f"NodeException({str(self)})"
 
 
 EventValue = Tuple[Any, ...]
@@ -42,11 +50,13 @@ EventValue = Tuple[Any, ...]
 
 class ValidatorFunction(str):
     @classmethod
-    def __get_validators__(cls):
-        # one or more validators may be yielded which will be called in the
-        # order to validate the input, each validator will receive as an input
-        # the value returned from the previous validator
-        yield cls.validate
+    def __get_pydantic_core_schema__(  # noqa: D105
+        self,
+        source_type: Any,  # noqa: ANN401
+        handler: GetCoreSchemaHandler,  # noqa: ANN401
+    ) -> CoreSchema:
+        """Get the pydantic core schema for the search query"""
+        return core_schema.no_info_after_validator_function(self.validate, handler(str))
 
     @classmethod
     def validate(cls, v):
@@ -81,9 +91,7 @@ class SearchQuery(str):
     @classmethod
     def validate(cls, v):
         if not isinstance(v, str) and not isinstance(v, DocumentNode):
-            raise TypeError(
-                "Search query must be either a str or a graphql DocumentNode"
-            )
+            raise TypeError("Search query must be either a str or a graphql DocumentNode")
         if isinstance(v, str):
             v = parse_or_raise(v)
 
@@ -128,20 +136,16 @@ class SearchQuery(str):
         wrapped_query = definition.selection_set.selections[0]
 
         options_value = (
-            wrapped_query.alias.value
-            if wrapped_query.alias
-            else wrapped_query.name.value
+            wrapped_query.alias.value if wrapped_query.alias else wrapped_query.name.value
         )
         if options_value != "options":
             raise ValueError(
-                "First element of query should be 'options':  Was given:"
-                f" {print_ast(v)}"
+                f"First element of query should be 'options':  Was given: {print_ast(v)}"
             )
 
         wrapped_selection = wrapped_query.selection_set.selections
         aliases = [
-            field.alias.value if field.alias else field.name.value
-            for field in wrapped_selection
+            field.alias.value if field.alias else field.name.value for field in wrapped_selection
         ]
         if "value" not in aliases:
             raise ValueError(
@@ -156,5 +160,6 @@ class SearchQuery(str):
 
         return print_ast(v)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """Return a string representation of the SearchQuery."""
         return f"SearchQuery({repr(self)})"

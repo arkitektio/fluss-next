@@ -35,14 +35,13 @@ fragment FlussChoiceAssignWidget on ChoiceAssignWidget {
   }
 }
 
-fragment FlussChildPortNested on ChildPort {
+fragment FlussChildPortNested on Port {
   __typename
   kind
   identifier
   children {
     kind
     identifier
-    scope
     assignWidget {
       __typename
       kind
@@ -59,7 +58,6 @@ fragment FlussChildPortNested on ChildPort {
       ...FlussChoiceReturnWidget
     }
   }
-  scope
   assignWidget {
     __typename
     kind
@@ -77,11 +75,10 @@ fragment FlussChildPortNested on ChildPort {
   }
 }
 
-fragment FlussChildPort on ChildPort {
+fragment FlussChildPort on Port {
   __typename
   kind
   identifier
-  scope
   children {
     ...FlussChildPortNested
   }
@@ -101,12 +98,6 @@ fragment FlussChildPort on ChildPort {
     ...FlussChoiceReturnWidget
   }
   nullable
-}
-
-fragment FlussEffectDependency on EffectDependency {
-  key
-  condition
-  value
 }
 
 fragment FlussCustomEffect on CustomEffect {
@@ -133,12 +124,10 @@ fragment FlussPort on Port {
   label
   nullable
   description
-  scope
   effects {
     kind
-    dependencies {
-      ...FlussEffectDependency
-    }
+    function
+    dependencies
     ...FlussCustomEffect
     ...FlussMessageEffect
   }
@@ -164,7 +153,6 @@ fragment FlussPort on Port {
   }
   default
   nullable
-  groups
   validators {
     ...Validator
   }

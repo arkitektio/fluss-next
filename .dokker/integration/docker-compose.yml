@@ -15,7 +15,7 @@ services:
     - redis
     - db
     - minio
-    image: jhnnsrs/fluss:next
+    image: jhnnsrs/fluss_next:nightly
     command: bash run-debug.sh
     ports:
     - 8456:80
