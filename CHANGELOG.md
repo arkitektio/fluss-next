@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.0 (2025-05-04)
+
+### Features
+
+- Refactor port tests to separate integer and float port validations
+  ([`724d077`](https://github.com/arkitektio/fluss-next/commit/724d077b19f497fbe41716a530df190f796d3309))
+
+
 ## v0.3.0 (2025-05-04)
 
 ### Features
