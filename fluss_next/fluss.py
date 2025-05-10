@@ -15,4 +15,7 @@ class Fluss(Composition):
 
     """
 
-    rath: FlussRath = Field(default_factory=FlussRath)
+    rath: FlussRath = Field(
+        ...,
+        description="The Rath client used to interact with the Rekuest API.",
+    )

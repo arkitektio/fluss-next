@@ -1,8 +1,9 @@
 """Custom scalars for GraphQL queries and exceptions."""
 
-from typing import Any, Tuple
+from typing import Any, Tuple, Union
 from graphql import (
     DocumentNode,
+    FieldNode,
     parse,
     OperationDefinitionNode,
     OperationType,
@@ -12,6 +13,7 @@ from graphql import (
 )
 from pydantic import GetCoreSchemaHandler
 from pydantic_core import CoreSchema, core_schema
+import re
 
 
 class NodeException(str):
@@ -19,12 +21,12 @@ class NodeException(str):
 
     @classmethod
     def __get_pydantic_core_schema__(  # noqa: D105
-        self,
+        cls,
         source_type: Any,  # noqa: ANN401
         handler: GetCoreSchemaHandler,  # noqa: ANN401
     ) -> CoreSchema:
         """Get the pydantic core schema for the search query"""
-        return core_schema.no_info_after_validator_function(self.validate, handler(str))
+        return core_schema.no_info_after_validator_function(cls.validate, handler(str))
 
     @classmethod
     def validate(cls, v: Any) -> str:  # noqa: ANN401
@@ -49,68 +51,117 @@ EventValue = Tuple[Any, ...]
 
 
 class ValidatorFunction(str):
+    """A validator function a string that represents a javascript function, That can handle
+    some validation logic on the frontend"""
+
     @classmethod
-    def __get_pydantic_core_schema__(  # noqa: D105
-        self,
+    def __get_pydantic_core_schema__(
+        cls,
         source_type: Any,  # noqa: ANN401
         handler: GetCoreSchemaHandler,  # noqa: ANN401
     ) -> CoreSchema:
-        """Get the pydantic core schema for the search query"""
-        return core_schema.no_info_after_validator_function(self.validate, handler(str))
+        """Get the pydantic core schema for the validator function"""
+        return core_schema.no_info_after_validator_function(cls.validate, handler(str))
 
     @classmethod
-    def validate(cls, v):
-        if not isinstance(v, str):
-            raise TypeError("ValidatorFunction must be a string")
+    def validate(cls, v: str) -> str:
+        """Validate the validator function"""
+
+        if not (v.startswith("(") or ("=>" not in v)):
+            raise ValueError("ValidatorFunction must be an arrow function or block function")
+
+        args_match = re.match(r"\((.*?)\)", v)
+        if args_match:
+            args = [arg.strip() for arg in args_match.group(1).split(",") if arg.strip()]
+
+            if not args:
+                raise ValueError("Function must have at least one argument")
 
         return v
 
-    def __repr__(self):
-        return f"ValidatorFunction({repr(self)})"
+    def retrieve_args(self) -> list[str]:
+        """Retrieve the arguments of the validator function"""
+        args_match = re.match(r"\((.*?)\)", self)
+        if args_match:
+            return [arg.strip() for arg in args_match.group(1).split(",") if arg.strip()]
+        return []
 
 
-def parse_or_raise(v: str):
+def parse_or_raise(v: str) -> DocumentNode:
+    """Parse a string to a graphql DocumentAction. If it fails, raise a ValueError
+    with the error message and the source location of the error.
+
+    Args:
+        v (str): The string to parse.
+    Raises:
+        ValueError: If the string cannot be parsed to a DocumentAction.
+    """
     try:
         return parse(v)
     except GraphQLError as e:
         x = repr(e)
         x += "\n" + v + "\n"
-        for line in e.locations:
-            x += "\n" + print_source_location(e.source, line)
+        if e.locations:
+            for loc in e.locations:
+                if e.source:
+                    x += "\n" + print_source_location(e.source, loc)
         raise ValueError("Could not parse to graphql: \n" + x)
 
 
 class SearchQuery(str):
-    @classmethod
-    def __get_validators__(cls):
-        # one or more validators may be yielded which will be called in the
-        # order to validate the input, each validator will receive as an input
-        # the value returned from the previous validator
-        yield cls.validate
+    """A search query is a string that represents a graphql query that can be used
+    to search for a specific value in a list of values. The query must be a valid
+    graphql query and must contain the following elements:
+
+    - A single operation definition
+    - A single selection set
+    - A single field with the name 'options'
+    - A variable "$search" of type String
+    - A variable "$values" of type [ID]
+
+
+
+    Optionally the query can also contain the following elements:
+
+    - Multiple variables of arribtary type that will be validated against
+    the dependencies of the widget.
+    """
 
     @classmethod
-    def validate(cls, v):
+    def __get_pydantic_core_schema__(  # noqa: D105
+        cls,
+        source_type: Any,  # noqa: ANN401
+        handler: GetCoreSchemaHandler,  # noqa: ANN401
+    ) -> CoreSchema:
+        """Get the pydantic core schema for the search query"""
+        return core_schema.no_info_after_validator_function(cls.validate, handler(str))
+
+    @classmethod
+    def validate(cls, v: Union[str, DocumentNode, Any]) -> str:
+        """Validate the search query"""
         if not isinstance(v, str) and not isinstance(v, DocumentNode):
-            raise TypeError("Search query must be either a str or a graphql DocumentNode")
+            raise TypeError("Search query must be either a str or a graphql DocumentAction")
         if isinstance(v, str):
             v = parse_or_raise(v)
 
         if not v.definitions or len(v.definitions) > 1:
             raise ValueError("Only one definintion allowed")
 
-        if not isinstance(v.definitions[0], OperationDefinitionNode):
-            raise ValueError("Needs an operation")
+        if len(v.definitions) == 0:
+            raise ValueError("No definition found")
 
         definition = v.definitions[0]
         if not definition:
             raise ValueError("Specify an operation")
 
+        if not isinstance(definition, OperationDefinitionNode):
+            raise ValueError("Needs an operation")
+
         if not definition.operation == OperationType.QUERY:
             raise ValueError("Needs to be operation")
 
         assert len(definition.variable_definitions) >= 2, (
-            "At least two arguments should be provided ($search: String, $values:"
-            f" [ID])): Was given: {print_ast(v)}"
+            f"At least two arguments should be provided ($search: String, $values: [ID])): Was given: {print_ast(v)}"
         )
 
         if (
@@ -118,9 +169,7 @@ class SearchQuery(str):
             or definition.variable_definitions[0].type.kind != "named_type"
         ):
             raise ValueError(
-                "First parameter of search function should be '$search: String' if you"
-                " provide arguments for your options. This parameter will be filled"
-                f" with userinput: Was given: {print_ast(v)}"
+                f"First parameter of search function should be '$search: String' if you provide arguments for your options. This parameter will be filled with userinput: Was given: {print_ast(v)}"
             )
 
         if (
@@ -128,12 +177,13 @@ class SearchQuery(str):
             or definition.variable_definitions[0].type.kind != "named_type"
         ):
             raise ValueError(
-                "Seconrd parameter of search function should be '$values: [ID]' if you"
-                " provide arguments for your options. This parameter will be filled"
-                f" with the default values: Was given: {print_ast(v)}"
+                f"Seconrd parameter of search function should be '$values: [ID]' if you provide arguments for your options. This parameter will be filled with the default values: Was given: {print_ast(v)}"
             )
 
         wrapped_query = definition.selection_set.selections[0]
+
+        if not isinstance(wrapped_query, FieldNode):
+            raise ValueError(f"Wrapped query should be a field node: Was given: {print_ast(v)}")
 
         options_value = (
             wrapped_query.alias.value if wrapped_query.alias else wrapped_query.name.value
@@ -143,23 +193,30 @@ class SearchQuery(str):
                 f"First element of query should be 'options':  Was given: {print_ast(v)}"
             )
 
+        if not wrapped_query.selection_set:
+            raise ValueError(
+                f"Wrapped query should contain a selection set: Was given: {print_ast(v)}"
+            )
+
         wrapped_selection = wrapped_query.selection_set.selections
+
+        if not isinstance(wrapped_selection, list):
+            raise ValueError(
+                f"Wrapped query should contain a selection set: Was given: {print_ast(v)}"
+            )
+
         aliases = [
-            field.alias.value if field.alias else field.name.value for field in wrapped_selection
+            field.alias.value if field.alias else field.name.value
+            for field in wrapped_selection
+            if isinstance(field, FieldNode)
         ]
         if "value" not in aliases:
             raise ValueError(
-                "Searched query needs to contain a 'value' not that corresponds to the"
-                " selected value"
+                "Searched query needs to contain a 'value' not that corresponds to the selected value"
             )
         if "label" not in aliases:
             raise ValueError(
-                "Searched query needs to contain a 'label' that corresponds to the"
-                " displayed value to the user"
+                "Searched query needs to contain a 'label' that corresponds to the displayed value to the user"
             )
 
         return print_ast(v)
-
-    def __repr__(self) -> str:
-        """Return a string representation of the SearchQuery."""
-        return f"SearchQuery({repr(self)})"

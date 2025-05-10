@@ -5,26 +5,28 @@ allow you to execute queries and mutations using thre rekuest-rath client.
 
 """
 
-from typing import Any, Dict, Generator, AsyncGenerator
-from pydantic import BaseModel
+from typing import Any, Dict, Generator, AsyncGenerator, Type
 from fluss_next.rath import FlussRath, current_fluss_next_rath
-from koil import unkoil
-from koil.helpers import unkoil_gen
-from rath.turms.funcs import TurmsOperation
+from koil import unkoil, unkoil_gen
+from rath.turms.funcs import TOperation
+from .errors import NoFlussFound
 
 
 def execute(
-    operation: TurmsOperation, variables: Dict[str, Any], rath: FlussRath = None
-) -> BaseModel:
+    operation: Type[TOperation], variables: Dict[str, Any], rath: FlussRath | None = None
+) -> TOperation:
     """Executes a query or mutation using rath in a blocking way."""
     return unkoil(aexecute, operation, variables, rath)
 
 
 async def aexecute(
-    operation: TurmsOperation, variables: Dict[str, Any], rath: FlussRath = None
-) -> BaseModel:
+    operation: Type[TOperation], variables: Dict[str, Any], rath: FlussRath | None = None
+) -> TOperation:
     """Executes a query or mutation using rath in a non-blocking way."""
     rath = rath or current_fluss_next_rath.get()
+    if not rath:
+        raise NoFlussFound("No rath client found in context. Please provide a rath client.")
+
     x = await rath.aquery(
         operation.Meta.document,
         operation.Arguments(**variables).model_dump(by_alias=True),
@@ -33,17 +35,20 @@ async def aexecute(
 
 
 def subscribe(
-    operation: TurmsOperation, variables: Dict[str, Any], rath: FlussRath = None
-) -> Generator[BaseModel, None, None]:
+    operation: Type[TOperation], variables: Dict[str, Any], rath: FlussRath | None = None
+) -> Generator[TOperation, None, None]:
     """Subscribes to a query or mutation using rath in a blocking way."""
     return unkoil_gen(asubscribe, operation, variables, rath)
 
 
 async def asubscribe(
-    operation: TurmsOperation, variables: Dict[str, Any], rath: FlussRath = None
-) -> AsyncGenerator[BaseModel, None]:
+    operation: Type[TOperation], variables: Dict[str, Any], rath: FlussRath | None = None
+) -> AsyncGenerator[TOperation, None]:
     """Subscribes to a query or mutation using rath in a non-blocking way."""
     rath = rath or current_fluss_next_rath.get()
+    if not rath:
+        raise NoFlussFound("No rath client found in context. Please provide a rath client.")
+
     async for event in rath.asubscribe(
         operation.Meta.document,
         operation.Arguments(**variables).model_dump(by_alias=True),
