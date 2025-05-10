@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.5.0 (2025-05-10)
+
+### Features
+
+- Add integration tests and configuration for Fluss workspace creation
+  ([`82c07d3`](https://github.com/arkitektio/fluss-next/commit/82c07d35117d6b03751bef78b768a95441b870ea))
+
+- Created a new configuration file `fluss.yaml` for database, Django, Redis, and S3 settings. -
+  Implemented an integration test for workspace creation in `test_create_workspace.py`.
+
+
 ## v0.4.0 (2025-05-04)
 
 ### Features
