@@ -1,7 +1,15 @@
 # CHANGELOG
 
 
+## v0.6.1 (2025-05-13)
+
+
 ## v0.6.0 (2025-05-10)
+
+### Bug Fixes
+
+- Upgrade to 3.4 and add py.typed
+  ([`5c13b6f`](https://github.com/arkitektio/fluss-next/commit/5c13b6fae34e29551a1afedcd69e36e909b56989))
 
 ### Features
 
