@@ -1580,8 +1580,8 @@ class BaseGraphNodeBase(BaseModel):
     id: ID
     position: BaseGraphNodePosition
     parent_node: Optional[str] = Field(default=None, alias="parentNode")
-    globals_map: Dict = Field(alias="globalsMap")
-    constants_map: Dict = Field(alias="constantsMap")
+    globals_map: Dict[str, Any] = Field(alias="globalsMap")
+    constants_map: Dict[str, Any] = Field(alias="constantsMap")
     title: str
     description: str
     kind: GraphNodeKind
