@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.0 (2025-05-10)
+
+### Features
+
+- Update version to 0.5.0 and refactor NodeWithError class in tests
+  ([`7cf7647`](https://github.com/arkitektio/fluss-next/commit/7cf7647d585c3e6d3bb949d06894ef8bdf0790b3))
+
+
 ## v0.5.0 (2025-05-10)
 
 ### Features
