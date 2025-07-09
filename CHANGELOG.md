@@ -1,6 +1,21 @@
 # CHANGELOG
 
 
+## v0.7.0 (2025-07-09)
+
+### Features
+
+- Updated to new arkitekt stack
+  ([`65c7563`](https://github.com/arkitektio/fluss-next/commit/65c7563666a2774811f156a41b7e876b7f142b73))
+
+- Replaced HerreAuthLink with FaktsAuthLink in ArkitektNextFluss. - Updated build_service method to
+  remove Herre parameter. - Changed Docker images in docker-compose.yml from nightly to dev versions
+  for fluss_next and init services. - Updated rath dependency version from 3.4 to 3.5.1 in
+  pyproject.toml and uv.lock. - Added new dependencies: docstring-parser, fieldz, inflection,
+  jsonpatch, and jsonpointer in uv.lock. - Added rekuest-next dependency in both regular and dev
+  dependencies. - Created an empty __init__.py file in fluss_next/api directory.
+
+
 ## v0.6.1 (2025-05-13)
 
 
