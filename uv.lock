@@ -308,6 +308,15 @@ wheels = [
 ]
 
 [[package]]
+name = "docstring-parser"
+version = "0.16"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/08/12/9c22a58c0b1e29271051222d8906257616da84135af9ed167c9e28f85cb3/docstring_parser-0.16.tar.gz", hash = "sha256:538beabd0af1e2db0146b6bd3caa526c35a34d61af9fd2887f3a8a27a739aa6e", size = 26565 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d5/7c/e9fcff7623954d86bdc17782036cbf715ecab1bec4847c008557affe1ca8/docstring_parser-0.16-py3-none-any.whl", hash = "sha256:bf0a1387354d3691d102edef7ec124f219ef639982d096e26e3b60aeffa90637", size = 36533 },
+]
+
+[[package]]
 name = "dokker"
 version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -333,8 +342,20 @@ wheels = [
 ]
 
 [[package]]
+name = "fieldz"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/90/62/698c5cc2e7d4c8c89e63033e2e9d3c74902a1bf28782712eacb0653097ce/fieldz-0.1.2.tar.gz", hash = "sha256:0448ed5dacb13eaa49da0db786e87fae298fbd2652d26c510e5d7aea6b6bebf4", size = 17277 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6d/8c/8958392cade27a272daf45d09a08473073dedeccad94b097dfeb898d969f/fieldz-0.1.2-py3-none-any.whl", hash = "sha256:e25884d2821a2d5638ef8d4d8bce5d1039359cfcb46d0f93df8cb1f7c2eb3a2e", size = 17878 },
+]
+
+[[package]]
 name = "fluss-next"
-version = "0.5.0"
+version = "0.6.1"
 source = { editable = "." }
 dependencies = [
     { name = "rath" },
@@ -352,12 +373,13 @@ dev = [
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
     { name = "python-semantic-release" },
+    { name = "rekuest-next" },
     { name = "ruff" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "rath", specifier = ">=3.4" },
+    { name = "rath", specifier = ">=3.5.1" },
     { name = "websockets", specifier = ">=15.0.1" },
 ]
 
@@ -372,6 +394,7 @@ dev = [
     { name = "pytest-asyncio", specifier = ">=0.26.0" },
     { name = "pytest-cov", specifier = ">=6.1.1" },
     { name = "python-semantic-release", specifier = ">=9.21.0" },
+    { name = "rekuest-next", specifier = ">=0.12.2" },
     { name = "ruff", specifier = ">=0.0.254" },
 ]
 
@@ -504,6 +527,15 @@ wheels = [
 ]
 
 [[package]]
+name = "inflection"
+version = "0.5.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/7e/691d061b7329bc8d54edbf0ec22fbfb2afe61facb681f9aaa9bff7a27d04/inflection-0.5.1.tar.gz", hash = "sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417", size = 15091 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/59/91/aa6bde563e0085a02a435aa99b49ef75b0a4b062635e606dab23ce18d720/inflection-0.5.1-py2.py3-none-any.whl", hash = "sha256:f38b2b640938a4f35ade69ac3d053042959b62a0f1076a5bbaa1b9526605a8a2", size = 9454 },
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -531,6 +563,27 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/df/bf/f7da0350254c0ed7c72f3e33cef02e048281fec7ecec5f032d4aac52226b/jinja2-3.1.6.tar.gz", hash = "sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d", size = 245115 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl", hash = "sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67", size = 134899 },
+]
+
+[[package]]
+name = "jsonpatch"
+version = "1.33"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jsonpointer" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/42/78/18813351fe5d63acad16aec57f94ec2b70a09e53ca98145589e185423873/jsonpatch-1.33.tar.gz", hash = "sha256:9fcd4009c41e6d12348b4a0ff2563ba56a2923a7dfee731d004e212e1ee5030c", size = 21699 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/73/07/02e16ed01e04a374e644b575638ec7987ae846d25ad97bcc9945a3ee4b0e/jsonpatch-1.33-py2.py3-none-any.whl", hash = "sha256:0ae28c0cd062bbd8b8ecc26d7d164fbbea9652a1a3693f3b956c1eae5145dade", size = 12898 },
+]
+
+[[package]]
+name = "jsonpointer"
+version = "3.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6a/0a/eebeb1fa92507ea94016a2a790b93c2ae41a7e18778f85471dc54475ed25/jsonpointer-3.0.0.tar.gz", hash = "sha256:2b2d729f2091522d61c3b31f82e11870f60b68f43fbc705cb76bf4b832af59ef", size = 9114 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/71/92/5e77f98553e9e75130c78900d000368476aed74276eb8ae8796f65f00918/jsonpointer-3.0.0-py2.py3-none-any.whl", hash = "sha256:13e088adc14fca8b6aa8177c044e12701e6ad4b28ff10e65f2267a90109c9942", size = 7595 },
 ]
 
 [[package]]
@@ -1001,16 +1054,35 @@ wheels = [
 
 [[package]]
 name = "rath"
-version = "3.4.0"
+version = "3.5.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "graphql-core" },
     { name = "koil" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/24/af/0fbf6bdad464fc9b5dbfc6991dcedb0d1dfb4a28c1cacea6c90f4195df09/rath-3.4.0.tar.gz", hash = "sha256:8a48614db2981f3e28c518eb04d02744fbb2f2e7e59db1c464f7fde8e6abe3ae", size = 33328 }
+sdist = { url = "https://files.pythonhosted.org/packages/14/d1/66585d55053a4b013a7be130c4e16b0828eeebe743f78131e9dcd721b8c8/rath-3.5.1.tar.gz", hash = "sha256:94d661627700db006f3491469ac91389c40ca612518a387f26820d19d855f3e9", size = 32743 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/73/9a/2ed456f855b5172ed387a0e9fbdd5c519b9c707ca985b1622ab194ce94e3/rath-3.4.0-py3-none-any.whl", hash = "sha256:abceea721eb51e44defb57127d6f0c07859ff16dfd42afd76f390265ca80a73f", size = 49479 },
+    { url = "https://files.pythonhosted.org/packages/8f/83/a7fbe223d6d52c2f6895c01ec07c4fd119a632d9d0b33be4834408527a9c/rath-3.5.1-py3-none-any.whl", hash = "sha256:402069e6c5c1a35bf2f611ee527249cfa608c519a6c432745b4afd01fa5ea64e", size = 48234 },
+]
+
+[[package]]
+name = "rekuest-next"
+version = "0.12.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "docstring-parser" },
+    { name = "fieldz" },
+    { name = "inflection" },
+    { name = "jsonpatch" },
+    { name = "koil" },
+    { name = "pydantic" },
+    { name = "rath" },
+    { name = "websockets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ce/83/e93d32ec2b7b45c5ba0cac6232651ff5cede9485e9d2792c610bee86aa36/rekuest_next-0.12.2.tar.gz", hash = "sha256:a4e98ce24882d37ec41614edc49320a89088066522be2e6660e7a54286703426", size = 103585 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e3/c2/58fc1155cfe1be78dab69a7260e06c5cca44acd3cb2d694d6dec866c1fd4/rekuest_next-0.12.2-py3-none-any.whl", hash = "sha256:91532b0ac045abe219cc5747a7e47fb357790c647853002e18509d4c96fed8d6", size = 140037 },
 ]
 
 [[package]]

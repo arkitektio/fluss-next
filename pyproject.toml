@@ -9,7 +9,7 @@ authors = [{ name = "jhnnsrs", email = "jhnnsrs@gmail.com" }]
 requires-python = ">=3.11, <4.0"
 license = "GPL-3.0-or-later"
 dependencies = [
-    "rath>=3.4",
+    "rath>=3.5.1",
     "websockets>=15.0.1",
 ]
 
@@ -26,6 +26,7 @@ dev-dependencies =  [
     "pytest-aiohttp>=1.0.4,<2",
     "ruff>=0.0.254",
     "dokker>=2",
+    "rekuest-next>=0.12.2",
 ]
 
 

@@ -1,12 +1,12 @@
-from enum import Enum
-from typing import Any, Optional, List, Annotated, Dict, Iterable, Literal, Union, Tuple
-from fluss_next.scalars import ValidatorFunction, EventValue
-from datetime import datetime
-from fluss_next.funcs import aexecute, execute
-from pydantic import BaseModel, ConfigDict, Field
 from fluss_next.traits import MockableTrait
+from datetime import datetime
+from pydantic import ConfigDict, Field, BaseModel
+from typing import List, Tuple, Iterable, Annotated, Union, Any, Dict, Optional, Literal
+from enum import Enum
+from fluss_next.scalars import EventValue, ValidatorFunction
+from fluss_next.funcs import execute, aexecute
+from rath.scalars import ID, IDCoercible
 from fluss_next.rath import FlussRath
-from rath.scalars import ID
 
 
 class GraphNodeKind(str, Enum):
@@ -132,7 +132,7 @@ class OffsetPaginationInput(BaseModel):
     """No documentation"""
 
     offset: int
-    limit: int
+    limit: Optional[int] = None
     model_config = ConfigDict(
         frozen=True, extra="forbid", populate_by_name=True, use_enum_values=True
     )
@@ -457,7 +457,7 @@ class TrackInput(BaseModel):
 
 
 class RunFlow(BaseModel):
-    """Flow(id, created_at, workspace, creator, restrict, version, title, nodes, edges, graph, hash, description, brittle)"""
+    """No documentation"""
 
     typename: Literal["Flow"] = Field(alias="__typename", default="Flow", exclude=True)
     id: ID
@@ -466,13 +466,12 @@ class RunFlow(BaseModel):
 
 
 class RunEvents(BaseModel):
-    """RunEvent(id, created_at, reference, run, kind, t, caused_by, source, handle, value, exception)"""
+    """No documentation"""
 
     typename: Literal["RunEvent"] = Field(
         alias="__typename", default="RunEvent", exclude=True
     )
     kind: RunEventKind
-    "The type of event"
     t: int
     caused_by: Tuple[ID, ...] = Field(alias="causedBy")
     created_at: datetime = Field(alias="createdAt")
@@ -481,7 +480,7 @@ class RunEvents(BaseModel):
 
 
 class Run(BaseModel):
-    """Run(id, created_at, flow, assignation, status, snapshot_interval)"""
+    """No documentation"""
 
     typename: Literal["Run"] = Field(alias="__typename", default="Run", exclude=True)
     id: ID
@@ -768,7 +767,7 @@ class StreamItem(MockableTrait, BaseModel):
 
 
 class ListFlowWorkspace(BaseModel):
-    """Graph is a Template for a Template"""
+    """No documentation"""
 
     typename: Literal["Workspace"] = Field(
         alias="__typename", default="Workspace", exclude=True
@@ -778,7 +777,7 @@ class ListFlowWorkspace(BaseModel):
 
 
 class ListFlow(BaseModel):
-    """Flow(id, created_at, workspace, creator, restrict, version, title, nodes, edges, graph, hash, description, brittle)"""
+    """No documentation"""
 
     typename: Literal["Flow"] = Field(alias="__typename", default="Flow", exclude=True)
     id: ID
@@ -1164,7 +1163,7 @@ class BaseGraphEdgeLoggingEdge(BaseGraphEdgeBase, BaseModel):
 
 
 class ListWorkspace(BaseModel):
-    """Graph is a Template for a Template"""
+    """No documentation"""
 
     typename: Literal["Workspace"] = Field(
         alias="__typename", default="Workspace", exclude=True
@@ -1543,7 +1542,7 @@ class FlussPort(BaseModel):
 
 
 class ReactiveTemplate(BaseModel):
-    """ReactiveTemplate(id, title, description, implementation, ins, outs, voids, constants)"""
+    """No documentation"""
 
     typename: Literal["ReactiveTemplate"] = Field(
         alias="__typename", default="ReactiveTemplate", exclude=True
@@ -1553,7 +1552,6 @@ class ReactiveTemplate(BaseModel):
     outs: Tuple[Tuple[FlussPort, ...], ...]
     constants: Tuple[FlussPort, ...]
     implementation: ReactiveImplementation
-    "Check async Programming Textbook"
     title: str
     description: Optional[str] = Field(default=None)
     model_config = ConfigDict(frozen=True)
@@ -1580,8 +1578,8 @@ class BaseGraphNodeBase(BaseModel):
     id: ID
     position: BaseGraphNodePosition
     parent_node: Optional[str] = Field(default=None, alias="parentNode")
-    globals_map: Dict[str, Any] = Field(alias="globalsMap")
-    constants_map: Dict[str, Any] = Field(alias="constantsMap")
+    globals_map: Dict = Field(alias="globalsMap")
+    constants_map: Dict = Field(alias="constantsMap")
     title: str
     description: str
     kind: GraphNodeKind
@@ -1902,7 +1900,7 @@ class Graph(BaseModel):
 
 
 class FlowWorkspace(BaseModel):
-    """Graph is a Template for a Template"""
+    """No documentation"""
 
     typename: Literal["Workspace"] = Field(
         alias="__typename", default="Workspace", exclude=True
@@ -1912,7 +1910,7 @@ class FlowWorkspace(BaseModel):
 
 
 class Flow(BaseModel):
-    """Flow(id, created_at, workspace, creator, restrict, version, title, nodes, edges, graph, hash, description, brittle)"""
+    """No documentation"""
 
     typename: Literal["Flow"] = Field(alias="__typename", default="Flow", exclude=True)
     id: ID
@@ -1925,7 +1923,7 @@ class Flow(BaseModel):
 
 
 class Workspace(BaseModel):
-    """Graph is a Template for a Template"""
+    """No documentation"""
 
     typename: Literal["Workspace"] = Field(
         alias="__typename", default="Workspace", exclude=True
@@ -1937,7 +1935,7 @@ class Workspace(BaseModel):
 
 
 class CreateRunMutationCreaterun(BaseModel):
-    """Run(id, created_at, flow, assignation, status, snapshot_interval)"""
+    """No documentation"""
 
     typename: Literal["Run"] = Field(alias="__typename", default="Run", exclude=True)
     id: ID
@@ -1953,6 +1951,7 @@ class CreateRunMutation(BaseModel):
         """Arguments for CreateRun"""
 
         input: CreateRunInput
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for CreateRun"""
@@ -1961,7 +1960,7 @@ class CreateRunMutation(BaseModel):
 
 
 class CloseRunMutationCloserun(BaseModel):
-    """Run(id, created_at, flow, assignation, status, snapshot_interval)"""
+    """No documentation"""
 
     typename: Literal["Run"] = Field(alias="__typename", default="Run", exclude=True)
     id: ID
@@ -1977,6 +1976,7 @@ class CloseRunMutation(BaseModel):
         """Arguments for CloseRun"""
 
         run: ID
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for CloseRun"""
@@ -1985,7 +1985,7 @@ class CloseRunMutation(BaseModel):
 
 
 class SnapshotMutationSnapshot(BaseModel):
-    """Snapshot(id, created_at, run, t, status)"""
+    """No documentation"""
 
     typename: Literal["Snapshot"] = Field(
         alias="__typename", default="Snapshot", exclude=True
@@ -2003,6 +2003,7 @@ class SnapshotMutation(BaseModel):
         """Arguments for Snapshot"""
 
         input: SnapshotRunInput
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for Snapshot"""
@@ -2011,14 +2012,13 @@ class SnapshotMutation(BaseModel):
 
 
 class TrackMutationTrack(BaseModel):
-    """RunEvent(id, created_at, reference, run, kind, t, caused_by, source, handle, value, exception)"""
+    """No documentation"""
 
     typename: Literal["RunEvent"] = Field(
         alias="__typename", default="RunEvent", exclude=True
     )
     id: ID
     kind: RunEventKind
-    "The type of event"
     value: Optional[EventValue] = Field(default=None)
     caused_by: Tuple[ID, ...] = Field(alias="causedBy")
     model_config = ConfigDict(frozen=True)
@@ -2033,6 +2033,7 @@ class TrackMutation(BaseModel):
         """Arguments for Track"""
 
         input: TrackInput
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for Track"""
@@ -2049,11 +2050,12 @@ class UpdateWorkspaceMutation(BaseModel):
         """Arguments for UpdateWorkspace"""
 
         input: UpdateWorkspaceInput
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for UpdateWorkspace"""
 
-        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nfragment Workspace on Workspace {\n  id\n  title\n  latestFlow {\n    ...Flow\n    __typename\n  }\n  __typename\n}\n\nmutation UpdateWorkspace($input: UpdateWorkspaceInput!) {\n  updateWorkspace(input: $input) {\n    ...Workspace\n    __typename\n  }\n}"
+        document = "fragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nfragment Workspace on Workspace {\n  id\n  title\n  latestFlow {\n    ...Flow\n    __typename\n  }\n  __typename\n}\n\nmutation UpdateWorkspace($input: UpdateWorkspaceInput!) {\n  updateWorkspace(input: $input) {\n    ...Workspace\n    __typename\n  }\n}"
 
 
 class CreateWorkspaceMutation(BaseModel):
@@ -2065,11 +2067,12 @@ class CreateWorkspaceMutation(BaseModel):
         """Arguments for CreateWorkspace"""
 
         input: CreateWorkspaceInput
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for CreateWorkspace"""
 
-        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nfragment Workspace on Workspace {\n  id\n  title\n  latestFlow {\n    ...Flow\n    __typename\n  }\n  __typename\n}\n\nmutation CreateWorkspace($input: CreateWorkspaceInput!) {\n  createWorkspace(input: $input) {\n    ...Workspace\n    __typename\n  }\n}"
+        document = "fragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nfragment Workspace on Workspace {\n  id\n  title\n  latestFlow {\n    ...Flow\n    __typename\n  }\n  __typename\n}\n\nmutation CreateWorkspace($input: CreateWorkspaceInput!) {\n  createWorkspace(input: $input) {\n    ...Workspace\n    __typename\n  }\n}"
 
 
 class RunQuery(BaseModel):
@@ -2081,6 +2084,7 @@ class RunQuery(BaseModel):
         """Arguments for Run"""
 
         id: ID
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for Run"""
@@ -2089,7 +2093,7 @@ class RunQuery(BaseModel):
 
 
 class SearchRunsQueryOptions(BaseModel):
-    """Run(id, created_at, flow, assignation, status, snapshot_interval)"""
+    """No documentation"""
 
     typename: Literal["Run"] = Field(alias="__typename", default="Run", exclude=True)
     value: ID
@@ -2107,6 +2111,7 @@ class SearchRunsQuery(BaseModel):
 
         search: Optional[str] = Field(default=None)
         values: Optional[List[ID]] = Field(default=None)
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for SearchRuns"""
@@ -2123,11 +2128,12 @@ class WorkspaceQuery(BaseModel):
         """Arguments for Workspace"""
 
         id: ID
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for Workspace"""
 
-        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nfragment Workspace on Workspace {\n  id\n  title\n  latestFlow {\n    ...Flow\n    __typename\n  }\n  __typename\n}\n\nquery Workspace($id: ID!) {\n  workspace(id: $id) {\n    ...Workspace\n    __typename\n  }\n}"
+        document = "fragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nfragment Workspace on Workspace {\n  id\n  title\n  latestFlow {\n    ...Flow\n    __typename\n  }\n  __typename\n}\n\nquery Workspace($id: ID!) {\n  workspace(id: $id) {\n    ...Workspace\n    __typename\n  }\n}"
 
 
 class WorkspacesQuery(BaseModel):
@@ -2139,6 +2145,7 @@ class WorkspacesQuery(BaseModel):
         """Arguments for Workspaces"""
 
         pagination: Optional[OffsetPaginationInput] = Field(default=None)
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for Workspaces"""
@@ -2155,11 +2162,12 @@ class ReactiveTemplatesQuery(BaseModel):
         """Arguments for ReactiveTemplates"""
 
         pagination: Optional[OffsetPaginationInput] = Field(default=None)
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for ReactiveTemplates"""
 
-        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ReactiveTemplate on ReactiveTemplate {\n  id\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  implementation\n  title\n  description\n  __typename\n}\n\nquery ReactiveTemplates($pagination: OffsetPaginationInput) {\n  reactiveTemplates(pagination: $pagination) {\n    ...ReactiveTemplate\n    __typename\n  }\n}"
+        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ReactiveTemplate on ReactiveTemplate {\n  id\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  implementation\n  title\n  description\n  __typename\n}\n\nquery ReactiveTemplates($pagination: OffsetPaginationInput) {\n  reactiveTemplates(pagination: $pagination) {\n    ...ReactiveTemplate\n    __typename\n  }\n}"
 
 
 class ReactiveTemplateQuery(BaseModel):
@@ -2171,11 +2179,12 @@ class ReactiveTemplateQuery(BaseModel):
         """Arguments for ReactiveTemplate"""
 
         id: ID
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for ReactiveTemplate"""
 
-        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ReactiveTemplate on ReactiveTemplate {\n  id\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  implementation\n  title\n  description\n  __typename\n}\n\nquery ReactiveTemplate($id: ID!) {\n  reactiveTemplate(id: $id) {\n    ...ReactiveTemplate\n    __typename\n  }\n}"
+        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ReactiveTemplate on ReactiveTemplate {\n  id\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  implementation\n  title\n  description\n  __typename\n}\n\nquery ReactiveTemplate($id: ID!) {\n  reactiveTemplate(id: $id) {\n    ...ReactiveTemplate\n    __typename\n  }\n}"
 
 
 class GetFlowQuery(BaseModel):
@@ -2187,11 +2196,12 @@ class GetFlowQuery(BaseModel):
         """Arguments for GetFlow"""
 
         id: ID
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for GetFlow"""
 
-        document = "fragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nquery GetFlow($id: ID!) {\n  flow(id: $id) {\n    ...Flow\n    __typename\n  }\n}"
+        document = "fragment EvenBasierGraphNode on GraphNode {\n  __typename\n  parentNode\n}\n\nfragment FlussBinds on Binds {\n  implementations\n  __typename\n}\n\nfragment FlussChildPortNested on Port {\n  __typename\n  kind\n  identifier\n  children {\n    kind\n    identifier\n    assignWidget {\n      __typename\n      kind\n      ...FlussStringAssignWidget\n      ...FlussSearchAssignWidget\n      ...FlussSliderAssignWidget\n      ...FlussChoiceAssignWidget\n      ...FlussCustomAssignWidget\n    }\n    returnWidget {\n      __typename\n      kind\n      ...FlussCustomReturnWidget\n      ...FlussChoiceReturnWidget\n    }\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n}\n\nfragment BaseGraphNode on GraphNode {\n  ...EvenBasierGraphNode\n  __typename\n  ins {\n    ...FlussPort\n    __typename\n  }\n  outs {\n    ...FlussPort\n    __typename\n  }\n  constants {\n    ...FlussPort\n    __typename\n  }\n  voids {\n    ...FlussPort\n    __typename\n  }\n  id\n  position {\n    x\n    y\n    __typename\n  }\n  parentNode\n  globalsMap\n  constantsMap\n  title\n  description\n  kind\n}\n\nfragment RekuestActionNode on RekuestActionNode {\n  hash\n  mapStrategy\n  allowLocalExecution\n  binds {\n    ...FlussBinds\n    __typename\n  }\n  actionKind\n  __typename\n}\n\nfragment FlussSearchAssignWidget on SearchAssignWidget {\n  __typename\n  kind\n  query\n  ward\n}\n\nfragment FlussSliderAssignWidget on SliderAssignWidget {\n  __typename\n  kind\n  min\n  max\n}\n\nfragment FlussCustomReturnWidget on CustomReturnWidget {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment FlussCustomEffect on CustomEffect {\n  __typename\n  kind\n  hook\n  ward\n}\n\nfragment StreamItem on StreamItem {\n  kind\n  label\n  __typename\n}\n\nfragment FlussMessageEffect on MessageEffect {\n  __typename\n  kind\n  message\n}\n\nfragment FlussStringAssignWidget on StringAssignWidget {\n  __typename\n  kind\n  placeholder\n  asParagraph\n}\n\nfragment FlussChoiceAssignWidget on ChoiceAssignWidget {\n  __typename\n  kind\n  choices {\n    value\n    label\n    description\n    __typename\n  }\n}\n\nfragment FlussCustomAssignWidget on CustomAssignWidget {\n  __typename\n  ward\n  hook\n}\n\nfragment FlussChildPort on Port {\n  __typename\n  kind\n  identifier\n  children {\n    ...FlussChildPortNested\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  nullable\n}\n\nfragment AssignableNode on AssignableNode {\n  nextTimeout\n  __typename\n}\n\nfragment FlussChoiceReturnWidget on ChoiceReturnWidget {\n  __typename\n  choices {\n    label\n    value\n    description\n    __typename\n  }\n}\n\nfragment RetriableNode on RetriableNode {\n  retries\n  retryDelay\n  __typename\n}\n\nfragment Validator on Validator {\n  function\n  dependencies\n  __typename\n}\n\nfragment ReturnNode on ReturnNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment BaseGraphEdge on GraphEdge {\n  __typename\n  id\n  source\n  sourceHandle\n  target\n  targetHandle\n  kind\n  stream {\n    ...StreamItem\n    __typename\n  }\n}\n\nfragment FlussPort on Port {\n  __typename\n  key\n  label\n  nullable\n  description\n  effects {\n    kind\n    function\n    dependencies\n    ...FlussCustomEffect\n    ...FlussMessageEffect\n    __typename\n  }\n  assignWidget {\n    __typename\n    kind\n    ...FlussStringAssignWidget\n    ...FlussSearchAssignWidget\n    ...FlussSliderAssignWidget\n    ...FlussChoiceAssignWidget\n    ...FlussCustomAssignWidget\n  }\n  returnWidget {\n    __typename\n    kind\n    ...FlussCustomReturnWidget\n    ...FlussChoiceReturnWidget\n  }\n  kind\n  identifier\n  children {\n    ...FlussChildPort\n    __typename\n  }\n  default\n  nullable\n  validators {\n    ...Validator\n    __typename\n  }\n}\n\nfragment RekuestMapActionNode on RekuestMapActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  hello\n}\n\nfragment ArgNode on ArgNode {\n  ...BaseGraphNode\n  __typename\n}\n\nfragment ReactiveNode on ReactiveNode {\n  ...BaseGraphNode\n  __typename\n  implementation\n}\n\nfragment RekuestFilterActionNode on RekuestFilterActionNode {\n  ...BaseGraphNode\n  ...RetriableNode\n  ...AssignableNode\n  ...RekuestActionNode\n  __typename\n  path\n}\n\nfragment LoggingEdge on LoggingEdge {\n  ...BaseGraphEdge\n  level\n  __typename\n}\n\nfragment GraphNode on GraphNode {\n  kind\n  ...RekuestFilterActionNode\n  ...RekuestMapActionNode\n  ...ReactiveNode\n  ...ArgNode\n  ...ReturnNode\n  __typename\n}\n\nfragment VanillaEdge on VanillaEdge {\n  ...BaseGraphEdge\n  label\n  __typename\n}\n\nfragment GlobalArg on GlobalArg {\n  key\n  port {\n    ...FlussPort\n    __typename\n  }\n  __typename\n}\n\nfragment Graph on Graph {\n  nodes {\n    ...GraphNode\n    __typename\n  }\n  edges {\n    ...LoggingEdge\n    ...VanillaEdge\n    __typename\n  }\n  globals {\n    ...GlobalArg\n    __typename\n  }\n  __typename\n}\n\nfragment Flow on Flow {\n  __typename\n  id\n  graph {\n    ...Graph\n    __typename\n  }\n  title\n  description\n  createdAt\n  workspace {\n    id\n    __typename\n  }\n}\n\nquery GetFlow($id: ID!) {\n  flow(id: $id) {\n    ...Flow\n    __typename\n  }\n}"
 
 
 class FlowsQuery(BaseModel):
@@ -2203,6 +2213,7 @@ class FlowsQuery(BaseModel):
         """Arguments for Flows"""
 
         limit: Optional[int] = Field(default=None)
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for Flows"""
@@ -2211,7 +2222,7 @@ class FlowsQuery(BaseModel):
 
 
 class SearchFlowsQueryOptions(BaseModel):
-    """Flow(id, created_at, workspace, creator, restrict, version, title, nodes, edges, graph, hash, description, brittle)"""
+    """No documentation"""
 
     typename: Literal["Flow"] = Field(alias="__typename", default="Flow", exclude=True)
     value: ID
@@ -2229,6 +2240,7 @@ class SearchFlowsQuery(BaseModel):
 
         search: Optional[str] = Field(default=None)
         values: Optional[List[ID]] = Field(default=None)
+        model_config = ConfigDict(populate_by_name=True)
 
     class Meta:
         """Meta class for SearchFlows"""
@@ -2237,12 +2249,15 @@ class SearchFlowsQuery(BaseModel):
 
 
 async def acreate_run(
-    flow: ID, snapshot_interval: int, assignation: ID, rath: Optional[FlussRath] = None
+    flow: IDCoercible,
+    snapshot_interval: int,
+    assignation: IDCoercible,
+    rath: Optional[FlussRath] = None,
 ) -> CreateRunMutationCreaterun:
     """CreateRun
      Start a run on fluss
 
-    Arguments:
+    Args:
         flow: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
         snapshot_interval: The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. (required)
         assignation: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
@@ -2267,12 +2282,15 @@ async def acreate_run(
 
 
 def create_run(
-    flow: ID, snapshot_interval: int, assignation: ID, rath: Optional[FlussRath] = None
+    flow: IDCoercible,
+    snapshot_interval: int,
+    assignation: IDCoercible,
+    rath: Optional[FlussRath] = None,
 ) -> CreateRunMutationCreaterun:
     """CreateRun
      Start a run on fluss
 
-    Arguments:
+    Args:
         flow: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
         snapshot_interval: The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. (required)
         assignation: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
@@ -2300,7 +2318,7 @@ async def aclose_run(
     """CloseRun
      Start a run on fluss
 
-    Arguments:
+    Args:
         run (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2314,7 +2332,7 @@ def close_run(run: ID, rath: Optional[FlussRath] = None) -> CloseRunMutationClos
     """CloseRun
      Start a run on fluss
 
-    Arguments:
+    Args:
         run (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2325,12 +2343,15 @@ def close_run(run: ID, rath: Optional[FlussRath] = None) -> CloseRunMutationClos
 
 
 async def asnapshot(
-    run: ID, events: Iterable[ID], t: int, rath: Optional[FlussRath] = None
+    run: IDCoercible,
+    events: Iterable[IDCoercible],
+    t: int,
+    rath: Optional[FlussRath] = None,
 ) -> SnapshotMutationSnapshot:
     """Snapshot
      Snapshot the current state on the fluss platform
 
-    Arguments:
+    Args:
         run: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
         events: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required) (list) (required)
         t: The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. (required)
@@ -2349,12 +2370,15 @@ async def asnapshot(
 
 
 def snapshot(
-    run: ID, events: Iterable[ID], t: int, rath: Optional[FlussRath] = None
+    run: IDCoercible,
+    events: Iterable[IDCoercible],
+    t: int,
+    rath: Optional[FlussRath] = None,
 ) -> SnapshotMutationSnapshot:
     """Snapshot
      Snapshot the current state on the fluss platform
 
-    Arguments:
+    Args:
         run: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
         events: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required) (list) (required)
         t: The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. (required)
@@ -2372,8 +2396,8 @@ async def atrack(
     reference: str,
     t: int,
     kind: RunEventKind,
-    run: ID,
-    caused_by: Iterable[ID],
+    run: IDCoercible,
+    caused_by: Iterable[IDCoercible],
     value: Optional[EventValue] = None,
     message: Optional[str] = None,
     exception: Optional[str] = None,
@@ -2384,7 +2408,7 @@ async def atrack(
     """Track
      Track a new event on the fluss platform
 
-    Arguments:
+    Args:
         reference: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text. (required)
         t: The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. (required)
         kind: RunEventKind (required)
@@ -2426,8 +2450,8 @@ def track(
     reference: str,
     t: int,
     kind: RunEventKind,
-    run: ID,
-    caused_by: Iterable[ID],
+    run: IDCoercible,
+    caused_by: Iterable[IDCoercible],
     value: Optional[EventValue] = None,
     message: Optional[str] = None,
     exception: Optional[str] = None,
@@ -2438,7 +2462,7 @@ def track(
     """Track
      Track a new event on the fluss platform
 
-    Arguments:
+    Args:
         reference: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text. (required)
         t: The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. (required)
         kind: RunEventKind (required)
@@ -2475,7 +2499,7 @@ def track(
 
 
 async def aupdate_workspace(
-    workspace: ID,
+    workspace: IDCoercible,
     graph: GraphInput,
     title: Optional[str] = None,
     description: Optional[str] = None,
@@ -2484,7 +2508,7 @@ async def aupdate_workspace(
     """UpdateWorkspace
 
 
-    Arguments:
+    Args:
         workspace: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
         graph:  (required)
         title: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
@@ -2511,7 +2535,7 @@ async def aupdate_workspace(
 
 
 def update_workspace(
-    workspace: ID,
+    workspace: IDCoercible,
     graph: GraphInput,
     title: Optional[str] = None,
     description: Optional[str] = None,
@@ -2520,7 +2544,7 @@ def update_workspace(
     """UpdateWorkspace
 
 
-    Arguments:
+    Args:
         workspace: The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID. (required)
         graph:  (required)
         title: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
@@ -2554,7 +2578,7 @@ async def acreate_workspace(
     """CreateWorkspace
 
 
-    Arguments:
+    Args:
         graph:
         title: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
         description: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
@@ -2590,7 +2614,7 @@ def create_workspace(
     """CreateWorkspace
 
 
-    Arguments:
+    Args:
         graph:
         title: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
         description: The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
@@ -2618,7 +2642,7 @@ async def arun(id: ID, rath: Optional[FlussRath] = None) -> Run:
     """Run
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2632,7 +2656,7 @@ def run(id: ID, rath: Optional[FlussRath] = None) -> Run:
     """Run
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2650,7 +2674,7 @@ async def asearch_runs(
     """SearchRuns
 
 
-    Arguments:
+    Args:
         search (Optional[str], optional): No description.
         values (Optional[List[ID]], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
@@ -2671,7 +2695,7 @@ def search_runs(
     """SearchRuns
 
 
-    Arguments:
+    Args:
         search (Optional[str], optional): No description.
         values (Optional[List[ID]], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
@@ -2688,7 +2712,7 @@ async def aworkspace(id: ID, rath: Optional[FlussRath] = None) -> Workspace:
     """Workspace
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2702,7 +2726,7 @@ def workspace(id: ID, rath: Optional[FlussRath] = None) -> Workspace:
     """Workspace
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2718,7 +2742,7 @@ async def aworkspaces(
     """Workspaces
 
 
-    Arguments:
+    Args:
         pagination (Optional[OffsetPaginationInput], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2736,7 +2760,7 @@ def workspaces(
     """Workspaces
 
 
-    Arguments:
+    Args:
         pagination (Optional[OffsetPaginationInput], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2752,7 +2776,7 @@ async def areactive_templates(
     """ReactiveTemplates
 
 
-    Arguments:
+    Args:
         pagination (Optional[OffsetPaginationInput], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2770,7 +2794,7 @@ def reactive_templates(
     """ReactiveTemplates
 
 
-    Arguments:
+    Args:
         pagination (Optional[OffsetPaginationInput], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2788,7 +2812,7 @@ async def areactive_template(
     """ReactiveTemplate
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2804,7 +2828,7 @@ def reactive_template(id: ID, rath: Optional[FlussRath] = None) -> ReactiveTempl
     """ReactiveTemplate
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2818,7 +2842,7 @@ async def aget_flow(id: ID, rath: Optional[FlussRath] = None) -> Flow:
     """GetFlow
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2832,7 +2856,7 @@ def get_flow(id: ID, rath: Optional[FlussRath] = None) -> Flow:
     """GetFlow
 
 
-    Arguments:
+    Args:
         id (ID): No description
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2848,7 +2872,7 @@ async def aflows(
     """Flows
 
 
-    Arguments:
+    Args:
         limit (Optional[int], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2864,7 +2888,7 @@ def flows(
     """Flows
 
 
-    Arguments:
+    Args:
         limit (Optional[int], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
 
@@ -2882,7 +2906,7 @@ async def asearch_flows(
     """SearchFlows
 
 
-    Arguments:
+    Args:
         search (Optional[str], optional): No description.
         values (Optional[List[ID]], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
@@ -2905,7 +2929,7 @@ def search_flows(
     """SearchFlows
 
 
-    Arguments:
+    Args:
         search (Optional[str], optional): No description.
         values (Optional[List[ID]], optional): No description.
         rath (fluss_next.rath.FlussRath, optional): The client we want to use (defaults to the currently active client)
