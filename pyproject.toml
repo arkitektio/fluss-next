@@ -1,6 +1,6 @@
 [project]
 name = "fluss-next"
-version = "1.0.0-rc.1" 
+version = "1.0.0" 
 readme = "README.md"
 readme-content-type = "text/markdown"
 homepage = "https://arkitekt.live"
