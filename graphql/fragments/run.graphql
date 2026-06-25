@@ -1,6 +1,6 @@
 fragment Run on Run {
   id
-  assignation
+  taskId
   flow {
     id
     title

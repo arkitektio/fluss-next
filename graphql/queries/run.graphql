@@ -7,6 +7,6 @@ query Run($id: ID!) {
 query SearchRuns($search: String, $values: [ID!]) {
   options: runs(filters: { search: $search, ids: $values }) {
     value: id
-    label: assignation
+    label: taskId
   }
 }
