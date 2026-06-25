@@ -44,7 +44,7 @@ def deployed_app() -> Generator[DeployedFluss, None, None]:
     setup.up_on_enter = False
     setup.add_health_check(
         url=lambda spec: f"http://localhost:{spec.find_service('fluss').get_port_for_internal(80).published}/graphql",
-        service="kabinet",
+        service="fluss",
         timeout=5,
         max_retries=15,
     )

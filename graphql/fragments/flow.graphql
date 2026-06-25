@@ -9,16 +9,16 @@ fragment BaseGraphNode on GraphNode {
   ...EvenBasierGraphNode
   __typename
   ins {
-    ...FlussPort
+    ...FlussArgPort
   }
   outs {
-    ...FlussPort
+    ...FlussReturnPort
   }
   constants {
-    ...FlussPort
+    ...FlussArgPort
   }
   voids {
-    ...FlussPort
+    ...FlussArgPort
   }
   id
   position {
@@ -31,10 +31,6 @@ fragment BaseGraphNode on GraphNode {
   title
   description
   kind
-}
-
-fragment FlussBinds on Binds {
-  implementations
 }
 
 fragment RetriableNode on RetriableNode {
@@ -50,9 +46,6 @@ fragment RekuestActionNode on RekuestActionNode {
   hash
   mapStrategy
   allowLocalExecution
-  binds {
-    ...FlussBinds
-  }
   actionKind
 }
 
@@ -121,7 +114,7 @@ fragment VanillaEdge on VanillaEdge {
 fragment GlobalArg on GlobalArg {
   key
   port {
-    ...FlussPort
+    ...FlussArgPort
   }
 }
 

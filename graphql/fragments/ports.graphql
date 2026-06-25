@@ -35,14 +35,14 @@ fragment FlussChoiceAssignWidget on ChoiceAssignWidget {
   }
 }
 
-fragment FlussChildPortNested on Port {
+fragment FlussChildArgPortNested on ArgPort {
   __typename
   kind
   identifier
   children {
     kind
     identifier
-    assignWidget {
+    widget {
       __typename
       kind
       ...FlussStringAssignWidget
@@ -51,14 +51,8 @@ fragment FlussChildPortNested on Port {
       ...FlussChoiceAssignWidget
       ...FlussCustomAssignWidget
     }
-    returnWidget {
-      __typename
-      kind
-      ...FlussCustomReturnWidget
-      ...FlussChoiceReturnWidget
-    }
   }
-  assignWidget {
+  widget {
     __typename
     kind
     ...FlussStringAssignWidget
@@ -67,7 +61,42 @@ fragment FlussChildPortNested on Port {
     ...FlussChoiceAssignWidget
     ...FlussCustomAssignWidget
   }
-  returnWidget {
+}
+
+fragment FlussChildArgPort on ArgPort {
+  __typename
+  kind
+  identifier
+  children {
+    ...FlussChildArgPortNested
+  }
+  widget {
+    __typename
+    kind
+    ...FlussStringAssignWidget
+    ...FlussSearchAssignWidget
+    ...FlussSliderAssignWidget
+    ...FlussChoiceAssignWidget
+    ...FlussCustomAssignWidget
+  }
+  nullable
+}
+
+fragment FlussChildReturnPortNested on ReturnPort {
+  __typename
+  kind
+  identifier
+  children {
+    kind
+    identifier
+    widget {
+      __typename
+      kind
+      ...FlussCustomReturnWidget
+      ...FlussChoiceReturnWidget
+    }
+  }
+  widget {
     __typename
     kind
     ...FlussCustomReturnWidget
@@ -75,23 +104,14 @@ fragment FlussChildPortNested on Port {
   }
 }
 
-fragment FlussChildPort on Port {
+fragment FlussChildReturnPort on ReturnPort {
   __typename
   kind
   identifier
   children {
-    ...FlussChildPortNested
+    ...FlussChildReturnPortNested
   }
-  assignWidget {
-    __typename
-    kind
-    ...FlussStringAssignWidget
-    ...FlussSearchAssignWidget
-    ...FlussSliderAssignWidget
-    ...FlussChoiceAssignWidget
-    ...FlussCustomAssignWidget
-  }
-  returnWidget {
+  widget {
     __typename
     kind
     ...FlussCustomReturnWidget
@@ -118,7 +138,7 @@ fragment Validator on Validator {
   dependencies
 }
 
-fragment FlussPort on Port {
+fragment FlussArgPort on ArgPort {
   __typename
   key
   label
@@ -131,7 +151,7 @@ fragment FlussPort on Port {
     ...FlussCustomEffect
     ...FlussMessageEffect
   }
-  assignWidget {
+  widget {
     __typename
     kind
     ...FlussStringAssignWidget
@@ -140,7 +160,31 @@ fragment FlussPort on Port {
     ...FlussChoiceAssignWidget
     ...FlussCustomAssignWidget
   }
-  returnWidget {
+  kind
+  identifier
+  children {
+    ...FlussChildArgPort
+  }
+  default
+  validators {
+    ...Validator
+  }
+}
+
+fragment FlussReturnPort on ReturnPort {
+  __typename
+  key
+  label
+  nullable
+  description
+  effects {
+    kind
+    function
+    dependencies
+    ...FlussCustomEffect
+    ...FlussMessageEffect
+  }
+  widget {
     __typename
     kind
     ...FlussCustomReturnWidget
@@ -149,13 +193,9 @@ fragment FlussPort on Port {
   kind
   identifier
   children {
-    ...FlussChildPort
+    ...FlussChildReturnPort
   }
   default
-  nullable
-  validators {
-    ...Validator
-  }
 }
 
 fragment FlussCustomReturnWidget on CustomReturnWidget {
