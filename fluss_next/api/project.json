@@ -1,9 +1,8 @@
 {
-    "schema_url": "http://jhnnsrs-lab/fluss/schema",
+    "schema": "http://jhnnsrs-lab/fluss/schema",
     "documents": "graphql/*/**.graphql",
     "extensions": {
         "turms": {
-            "pydantic_version": "v2",
             "domain": null,
             "out_dir": "fluss_next/api",
             "dump_configuration": true,
@@ -22,6 +21,7 @@
             "always_resolve_interfaces": true,
             "exclude_typenames": true,
             "scalar_definitions": {
+                "JSONSerializable": "typing.Any",
                 "uuid": "str",
                 "Callback": "str",
                 "Any": "typing.Any",
@@ -30,11 +30,11 @@
                 "EventValue": "fluss_next.scalars.EventValue",
                 "ValueMap": "typing.Dict",
                 "AnyDefault": "typing.Any",
-                "ValidatorFunction": "fluss_next.scalars.ValidatorFunction",
                 "Identifier": "str",
                 "SearchQuery": "str"
             },
             "coercible_scalars": {},
+            "coercible_inputs": {},
             "graphql_default_class": null,
             "deprecated_class": null,
             "document_field_metadata": true,
@@ -49,19 +49,17 @@
                 ],
                 "exclude": null,
                 "include": null,
-                "exclude_fields": [],
-                "include_fields": [],
                 "convert_list_to_tuple": true
             },
             "create_catchall": true,
             "options": {
                 "enabled": true,
                 "extra": "forbid",
-                "allow_mutation": null,
-                "allow_population_by_field_name": true,
-                "orm_mode": null,
-                "use_enum_values": true,
+                "populate_by_name": null,
+                "from_attributes": null,
+                "use_enum_values": null,
                 "validate_assignment": null,
+                "alias_mode": "split",
                 "types": [
                     "input"
                 ],
@@ -69,6 +67,8 @@
                 "include": null
             },
             "skip_forwards": false,
+            "min_python_version": "3.10",
+            "type_annotation_style": "auto",
             "additional_bases": {
                 "FlowGraph": [
                     "fluss_next.traits.Graph"
@@ -80,13 +80,9 @@
                     "fluss_next.traits.MockableTrait"
                 ]
             },
-            "additional_config": {
-                "EdgeInput": {
-                    "allow_population_by_field_name": true
-                }
-            },
+            "additional_config": {},
             "force_plugin_order": true,
-            "omited_document_rules": [],
+            "omitted_document_rules": [],
             "parsers": [],
             "plugins": [
                 {

@@ -19,10 +19,79 @@ fragment FlussSearchAssignWidget on SearchAssignWidget {
   ward
 }
 
+fragment FlussActionArgumentLeaf on ActionArgument {
+  key
+  valueLiteral
+  valuePath
+  utilCall {
+    operation
+  }
+}
+
+fragment FlussActionArgumentNested on ActionArgument {
+  key
+  valueLiteral
+  valuePath
+  utilCall {
+    operation
+    arguments {
+      ...FlussActionArgumentLeaf
+    }
+  }
+  valueList {
+    ...FlussActionArgumentLeaf
+  }
+  valueDict {
+    ...FlussActionArgumentLeaf
+  }
+}
+
+fragment FlussActionArgument on ActionArgument {
+  key
+  valueLiteral
+  valuePath
+  utilCall {
+    operation
+    arguments {
+      ...FlussActionArgumentNested
+    }
+  }
+  valueList {
+    ...FlussActionArgumentNested
+  }
+  valueDict {
+    ...FlussActionArgumentNested
+  }
+}
+
+fragment FlussUtilCall on UtilCall {
+  operation
+  arguments {
+    ...FlussActionArgument
+  }
+}
+
+fragment FlussComponentProp on ComponentProp {
+  key
+  staticValue
+  dynamicValue {
+    literal
+    path
+  }
+  declaresValue
+  utilCall {
+    ...FlussUtilCall
+  }
+}
+
 fragment FlussCustomAssignWidget on CustomAssignWidget {
   __typename
-  ward
-  hook
+  kind
+  component
+  props {
+    ...FlussComponentProp
+  }
+  dependencies
 }
 
 fragment FlussChoiceAssignWidget on ChoiceAssignWidget {
@@ -123,8 +192,6 @@ fragment FlussChildReturnPort on ReturnPort {
 fragment FlussCustomEffect on CustomEffect {
   __typename
   kind
-  hook
-  ward
 }
 
 fragment FlussMessageEffect on MessageEffect {
@@ -134,8 +201,14 @@ fragment FlussMessageEffect on MessageEffect {
 }
 
 fragment Validator on Validator {
-  function
+  call {
+    ...FlussUtilCall
+  }
+  callJson
+  source
   dependencies
+  label
+  errorMessage
 }
 
 fragment FlussArgPort on ArgPort {
@@ -146,7 +219,11 @@ fragment FlussArgPort on ArgPort {
   description
   effects {
     kind
-    function
+    call {
+      ...FlussUtilCall
+    }
+    callJson
+    source
     dependencies
     ...FlussCustomEffect
     ...FlussMessageEffect
@@ -179,7 +256,11 @@ fragment FlussReturnPort on ReturnPort {
   description
   effects {
     kind
-    function
+    call {
+      ...FlussUtilCall
+    }
+    callJson
+    source
     dependencies
     ...FlussCustomEffect
     ...FlussMessageEffect
@@ -201,8 +282,10 @@ fragment FlussReturnPort on ReturnPort {
 fragment FlussCustomReturnWidget on CustomReturnWidget {
   __typename
   kind
-  hook
-  ward
+  component
+  props {
+    ...FlussComponentProp
+  }
 }
 
 fragment FlussChoiceReturnWidget on ChoiceReturnWidget {
